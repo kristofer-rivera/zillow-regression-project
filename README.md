@@ -47,14 +47,14 @@ The scenario for this project assumes that I am a new junior data scientist on t
 
 ## Data Dictionary
 
- #   Feature         Datatype        Definition
----  ------          --------------  -----  
- 0   bedrooms        int64            Number of bedrooms in the property
- 1   bathrooms       float64          Number of bathrooms in the property
- 2   year_built      float64          Year that the property was built
- 3   square_feet     int64            Total size of the property in square feet
- 4   county          object           County where the property is located
- 5   assessed_value  int64            Tax assessed value of the property
+| Feature           | Datatype   | Definition                                 |    
+|:------------------|:-----------|:-------------------------------------------|
+| bedrooms          | int64      | Number of bedrooms in the property         |
+| bathrooms         | float64    | Number of bathrooms in the property        |
+| year_built        | object     | Year that the property was built           |
+| square_feet       | float64    | Total size of the property in square feet  |
+| county            | object     | County where the property is located       |
+| assessed_value    | float64    | Tax assessed value of the property         |
 
 
 # Instructions to Replicate My Work
