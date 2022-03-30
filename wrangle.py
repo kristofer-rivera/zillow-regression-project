@@ -184,11 +184,6 @@ def prepare_zillow(df):
     # Remove outliers from our data
     df = remove_outliers(df, 1.5, ['bedrooms', 'bathrooms', 'square_feet', 'assessed_value'])
     
-    # get distributions of numeric data
-    ## First define the columns I will look at
-    cols = ['bedrooms', 'bathrooms', 'square_feet', 'assessed_value']
-    get_hist(df, cols)
-    get_box(df, cols)
 
     # Converting floats to ints where appropriate
     df.bedrooms = df.bedrooms.astype(int)

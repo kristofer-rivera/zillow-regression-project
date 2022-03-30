@@ -18,6 +18,15 @@ def pearsonr(variable, target, alpha =.05):
     else:
         print('Since the P value is greater than the alpha, we fail to reject the null hypothesis.')
 
+def t_test_ind(variable, target, alpha =.05):
+    t, p = stats.ttest_ind(variable, target)
+    print(f'The t value between the two variables is {t:.4} and the P-Value is {p}.')
+    print('----------------------------------------------------------------------------')
+    if p < alpha:
+        print('Since the P value is less than the alpha, we reject the null hypothesis.')
+    else:
+        print('Since the P value is greater than the alpha, we fail to reject the null hypothesis.')
+
 def chi2(variable, target, alpha=.05):
     observed = pd.crosstab(variable, target)
     chi2, p, degf, expected = stats.chi2_contingency(observed)
@@ -29,6 +38,15 @@ def chi2(variable, target, alpha=.05):
         print('Since the P value is greater than the alpha, we fail to reject the null hypothesis.')
 
 
+#Function to visualize correlations
+def plot_correlations(df):
+    plt.figure(figsize= (15, 8))
+    df.corr()['assessed_value'].sort_values(ascending=False).plot(kind='bar', color = 'darkcyan')
+    plt.title('Correlations with Assessed Value', fontsize = 18)
+    plt.xlabel('Features')
+    plt.ylabel('Correlation')
+    plt.show()
+
 # Univariate exploration
 
 def plot_distributions(df):
@@ -36,6 +54,12 @@ def plot_distributions(df):
         sns.histplot(x = col, data=df)
         plt.title(col)
         plt.show()
+
+def plot_distribution(df, var):
+    sns.histplot(x = var, data=df)
+    plt.title(f'Distribution of {var}', fontsize=15)
+    plt.show()
+
 
 # catergorical vs continuous
 
@@ -120,3 +144,18 @@ def plot_swarm_grid_with_color(train, target, cat_vars, quant_vars):
             ax[i].set_ylabel(quant)
             ax[i].set_title(cat)
         plt.show()
+
+def plot_boxen(train, target, quant_var):
+    average = train[quant_var].mean()
+    p = sns.boxenplot(data=train, x=target, y=quant_var, color='lightseagreen')
+    p = plt.title(quant_var)
+    p = plt.axhline(average, ls='--', color='black')
+    return p
+
+def plot_bar(train, cat_var, quant_var):
+    average = train[quant_var].mean()
+    p = sns.barplot(data=train, x=cat_var, y=quant_var, palette='Set1')
+    p = plt.title(f'Relationship between {cat_var} and {quant_var}.', fontsize=15)
+    p = plt.axhline(average, ls='--', color='black')
+    return p
+    
