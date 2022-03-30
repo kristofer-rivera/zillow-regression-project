@@ -7,7 +7,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import MinMaxScaler
 
+# Acquire raw data
 def get_zillow(use_cache=True):
     '''
     This function takes in no arguments, uses the imported get_db_url function to establish a connection 
@@ -33,6 +35,8 @@ def get_zillow(use_cache=True):
         df.to_csv(filename, index=False)
         return df
 
+#remove outliers
+
 def remove_outliers(df, k, col_list):
     ''' remove outliers from a list of columns in a dataframe 
         and return that dataframe
@@ -52,6 +56,47 @@ def remove_outliers(df, k, col_list):
         df = df[(df[col] > lower_bound) & (df[col] < upper_bound)]
         
     return df
+
+# Scale data after splitting with MinMax
+def scale_data_mvp(train, validate, test, return_scaler=False):
+    '''
+    Scales the 3 data splits.
+    
+    takes in the train, validate, and test data splits and returns their scaled counterparts.
+    
+    If return_scaler is true, the scaler object will be returned as well.
+    '''
+    columns_to_scale = ['bedrooms', 'bathrooms', 'square_feet']
+    
+    train_scaled = train.copy()
+    validate_scaled = validate.copy()
+    test_scaled = test.copy()
+    
+    scaler = MinMaxScaler()
+    scaler.fit(train[columns_to_scale])
+    
+    train_scaled[columns_to_scale] = scaler.transform(train[columns_to_scale])
+    validate_scaled[columns_to_scale] = scaler.transform(validate[columns_to_scale])
+    test_scaled[columns_to_scale] = scaler.transform(test[columns_to_scale])
+    
+    if return_scaler:
+        return scaler, train_scaled, validate_scaled, test_scaled
+    else:
+        return train_scaled, validate_scaled, test_scaled
+
+def visualize_scaler(scaler, df, target_columns, bins=10):
+    fig, axs = plt.subplots(len(target_columns), 2, figsize=(16, 9))
+    df_scaled = df.copy()
+    df_scaled[target_columns] = scaler.fit_transform(df[target_columns])
+    for (ax1, ax2), col in zip(axs, target_columns):
+        ax1.hist(df[col], bins=bins)
+        ax1.set(title=f'{col} before scaling', xlabel=col, ylabel='count')
+        ax2.hist(df_scaled[col], bins=bins)
+        ax2.set(title=f'{col} after scaling with {scaler.__class__.__name__}', xlabel=col, ylabel='count')
+    plt.tight_layout()
+    return fig, axs
+
+
 
 
 # Univariate exploration
